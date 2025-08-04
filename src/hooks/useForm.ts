@@ -21,7 +21,6 @@ export const useForm = () => {
         } else {
           setError('Unknown error occurred.');
         }
-        console.log('retrying: ' + retry);
         fetchData(retry + 1);
       } finally {
         setLoading(false);
