@@ -1,8 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
-
-First, run the development server:
+## React Form From API Response
 
 ```bash
 npm run dev
@@ -45,8 +43,9 @@ const apiResponse: ApiResponse = {
 };
 
 // sudo api connection:
-// with 10% fail rate
-// and 2000 ms delay
+//  — with 10% fail rate
+//  — returns promise
+//  — and 2000 ms delay
 export const getFormFields = (): Promise<ApiResponse> => {
   const isBad = Math.random() < 0.1;
   return new Promise((resolve, reject) => {
