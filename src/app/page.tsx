@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, FormEvent, useRef } from 'react';
+import { useState, useEffect, useCallback, FormEvent, useRef } from 'react';
 import { getFormFields, ApiResponse } from '@/api/getFormFields';
 import type { FormField } from '@/api/getFormFields';
 import { Input } from '@/components/input';
@@ -47,19 +47,22 @@ export default function Home() {
     return true;
   }, true);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
 
-    const tableData: FormField[] = [];
+      const tableData: FormField[] = [];
 
-    Object.entries(formFields ?? {}).map(([key, field]) => {
-      tableData.push({ ...field });
-      handleUpdateValue(key, '');
-    });
+      Object.entries(formFields ?? {}).map(([key, field]) => {
+        tableData.push({ ...field });
+        handleUpdateValue(key, '');
+      });
 
-    setTableData(tableData);
-    if (ref.current) ref.current.focus();
-  };
+      setTableData(tableData);
+      if (ref.current) ref.current.focus();
+    },
+    [formFields]
+  );
 
   if (loading) return <div className='p-4'>Loading…</div>;
   if (error) return <div className='p-4'>{error}</div>;
