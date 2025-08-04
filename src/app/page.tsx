@@ -1,103 +1,157 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect, FormEvent, useRef, RefObject } from 'react';
+import {
+  getFormFields,
+  ApiResponse,
+  type FormField,
+} from '@/api/getFormFields';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [formFields, setFormFields] = useState<ApiResponse>();
+  const [tableData, setTableData] = useState<FormField[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getFormFields();
+        setFormFields(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Unknown error occurred.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const handleUpdateValue = (id: string, value: string | number) =>
+    setFormFields((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [id]: {
+          ...prev[id],
+          value,
+        },
+      };
+    });
+
+  const isDisabled = !Object.values(formFields ?? {}).reduce((acc, field) => {
+    if (!acc) return false;
+    if (field.required && !field.value) return false;
+    return true;
+  }, true);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    const tableData: FormField[] = [];
+
+    Object.entries(formFields ?? {}).map(([key, field]) => {
+      tableData.push({ ...field });
+      handleUpdateValue(key, '');
+    });
+
+    setTableData(tableData);
+    if (ref.current) ref.current.focus();
+  };
+
+  if (loading) return <div>Loading…</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div className='p-4'>
+      <form onSubmit={handleSubmit} className=' max-w-3xs flex flex-col gap-4'>
+        {Object.entries(formFields ?? {}).map(([key, field], index) => (
+          <Input
+            key={key}
+            id={key}
+            field={field}
+            setValue={handleUpdateValue}
+            inputRef={index === 0 ? ref : undefined}
+          />
+        ))}
+        <div>
+          <button
+            type='submit'
+            disabled={isDisabled}
+            className={`${
+              isDisabled
+                ? 'bg-blue-200'
+                : 'bg-blue-500 hover:bg-blue-700 cursor-pointer'
+            }  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Submit
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </form>
+      <div className='py-4'>
+        {Object.entries(formFields ?? {}).map(([key, field]) => {
+          return (
+            <div key={key}>
+              <strong>{field.name}:</strong> {field.value}
+            </div>
+          );
+        })}
+      </div>
+      {tableData.length > 0 ? (
+        <table className='table-auto border-collaps max-w-3xs w-full border border-gray-400 max'>
+          <thead>
+            <tr>
+              <th className='text-left p-2 bg-gray-100 text-xs'>Field</th>
+              <th className='text-left p-2 bg-gray-100 text-xs'>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableData?.map((field: FormField) => {
+              return (
+                <tr key={field.name}>
+                  <td className='border-t border-gray-400 border-solid p-2 text-xs'>
+                    {field.name}
+                  </td>
+                  <td className='border-t border-gray-400 border-solid p-2 font-mono'>
+                    {field.value}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ) : null}
     </div>
   );
 }
+
+interface InputI {
+  id: string;
+  field: FormField;
+  setValue: (id: string, value: string | number) => void;
+  inputRef?: RefObject<HTMLInputElement | null>;
+}
+
+const Input = ({ id, field, setValue, inputRef }: InputI) => {
+  return (
+    <div>
+      <label htmlFor={id}>
+        {field.name}
+        {field.required ? '*' : null}
+      </label>
+      <input
+        id={id}
+        name={id}
+        type={field.type}
+        onChange={(e) => setValue(id, e.target.value)}
+        value={field.value || ''}
+        required={field.required ?? false}
+        ref={inputRef}
+        className='appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight'
+      />
+    </div>
+  );
+};
