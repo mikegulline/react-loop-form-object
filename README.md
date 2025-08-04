@@ -11,6 +11,11 @@ npm run dev
 Building a React form that dynamically renders input fields based on API response, handles state updates, validates required fields, and, upon successful submission, clears the form and programmatically focuses the first input field.
 
 ```typescript
+/*
+  @/api/getFormFields.ts
+*/
+
+// interface for field objects
 export interface FormField {
   name: string;
   type: string;
@@ -18,8 +23,10 @@ export interface FormField {
   value?: string | number;
 }
 
+// type for api response
 export type ApiResponse = Record<string, FormField>;
 
+// api response payload
 const apiResponse: ApiResponse = {
   userName: {
     name: 'User Name',
@@ -37,6 +44,9 @@ const apiResponse: ApiResponse = {
   },
 };
 
+// sudo api connection:
+// with 10% fail rate
+// and 2000 ms delay
 export const getFormFields = (): Promise<ApiResponse> => {
   const isBad = Math.random() < 0.1;
   return new Promise((resolve, reject) => {
