@@ -18,7 +18,9 @@ export const useForm = () => {
         setError(null);
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(err.message + `${retry ? `(retrying: ${retry})` : ''}`);
+          setError(
+            err.message + `${retry ? ` (retry attempt: ${retry})` : ''}`
+          );
         } else {
           setError('Unknown error occurred.');
         }
@@ -31,10 +33,8 @@ export const useForm = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (ref.current) ref.current.focus();
-    }, 300);
-  }, [loading, error]);
+    if (ref.current) ref.current.focus();
+  }, [formFields]);
 
   const handleUpdateValue = (id: string, value: string | number) =>
     setFormFields((prev) => {
