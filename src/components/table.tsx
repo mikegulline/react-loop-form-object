@@ -3,7 +3,7 @@ import { FormField } from '@/api/getFormFields';
 export const Table = ({ data }: { data: FormField[] }) => {
   if (!data.length) return null;
   return (
-    <div className='mt-4 max-w-md overflow-hidden rounded border border-gray-400'>
+    <div className='max-w-md overflow-hidden rounded border border-gray-400 fade-up'>
       <table className='table-auto border-collaps w-full '>
         <thead>
           <tr>

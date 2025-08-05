@@ -22,3 +22,18 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fade-up {
+  animation: fadeinup 0.5s forwards;
+}
+
+@keyframes fadeinup {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

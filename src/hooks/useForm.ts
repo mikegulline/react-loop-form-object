@@ -29,6 +29,12 @@ export const useForm = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (ref.current) ref.current.focus();
+    }, 300);
+  }, [loading, error]);
+
   const handleUpdateValue = (id: string, value: string | number) =>
     setFormFields((prev) => {
       if (!prev) return prev;

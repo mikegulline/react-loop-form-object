@@ -23,7 +23,7 @@ export const Form = ({
   }, true);
 
   return (
-    <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+    <form onSubmit={handleSubmit} className='flex flex-col gap-4 fade-up'>
       {Object.entries(fields ?? {}).map(([key, field], index) => (
         <Input
           key={key}
