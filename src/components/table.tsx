@@ -15,10 +15,10 @@ export const Table = ({ data }: { data: FormField[] }) => {
           {data?.map((field: FormField) => {
             return (
               <tr key={field.name}>
-                <td className='border-t border-gray-400 border-solid p-2 text-xs'>
+                <td className='border-t border-gray-400 p-2 text-xs'>
                   {field.name}
                 </td>
-                <td className='border-t border-gray-400 border-solid p-2 font-mono'>
+                <td className='border-t border-gray-400 p-2 font-mono'>
                   {field.value}
                 </td>
               </tr>

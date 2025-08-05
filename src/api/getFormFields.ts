@@ -8,19 +8,24 @@ export interface FormField {
 export type ApiResponse = Record<string, FormField>;
 
 const apiResponse: ApiResponse = {
-  userName: {
-    name: 'User Name',
+  firstName: {
+    name: 'First Name',
+    type: 'text',
+    required: true,
+  },
+  lastName: {
+    name: 'Last Name',
     type: 'text',
     required: true,
   },
   email: {
     name: 'Email Address',
-    type: 'text',
+    type: 'email',
     required: true,
   },
   phoneNumber: {
     name: 'Phone Number',
-    type: 'text',
+    type: 'tel',
   },
 };
 

@@ -33,7 +33,10 @@ export const useForm = () => {
   }, []);
 
   useEffect(() => {
-    if (ref.current) ref.current.focus();
+    if (ref.current) {
+      ref.current.focus();
+      ref.current = null;
+    }
   }, [formFields]);
 
   const handleUpdateValue = (id: string, value: string | number) =>
