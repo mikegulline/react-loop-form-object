@@ -24,14 +24,14 @@ const apiResponse: ApiResponse = {
   },
 };
 
-export const getFormFields = (): Promise<ApiResponse> => {
+export const getFormFields = (): Promise<string> => {
   const isBad = Math.random() < 0.1;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (isBad) {
         reject(new Error('ERROR: Bad API response!'));
       } else {
-        resolve(apiResponse);
+        resolve(JSON.stringify(apiResponse));
       }
     }, 2000);
   });
