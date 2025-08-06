@@ -6,14 +6,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 npm run dev
 ```
 
-Building a React form that dynamically renders input fields based on API response, handles state updates, validates required fields, and, upon successful submission, clears the form and programmatically focuses the first input field.
+Building a dynamic React form that renders input fields from an API response, auto-focuses the first field, manages state updates, validates required fields, and—on successful submission—clears the form and displays the submitted data in a table.
 
 ```typescript
 /*
   @/api/getFormFields.ts
 */
-
-// interface for field objects
 export interface FormField {
   name: string;
   type: string;
@@ -21,39 +19,38 @@ export interface FormField {
   value?: string | number;
 }
 
-// type for api response
 export type ApiResponse = Record<string, FormField>;
 
-// api response payload
 const apiResponse: ApiResponse = {
-  userName: {
-    name: 'User Name',
+  firstName: {
+    name: 'First Name',
+    type: 'text',
+    required: true,
+  },
+  lastName: {
+    name: 'Last Name',
     type: 'text',
     required: true,
   },
   email: {
     name: 'Email Address',
-    type: 'text',
+    type: 'email',
     required: true,
   },
   phoneNumber: {
     name: 'Phone Number',
-    type: 'text',
+    type: 'tel',
   },
 };
 
-// sudo api connection:
-//  — with 10% fail rate
-//  — returns promise
-//  — and 2000 ms delay
-export const getFormFields = (): Promise<ApiResponse> => {
+export const getFormFields = (): Promise<string> => {
   const isBad = Math.random() < 0.1;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (isBad) {
         reject(new Error('ERROR: Bad API response!'));
       } else {
-        resolve(apiResponse);
+        resolve(JSON.stringify(apiResponse));
       }
     }, 2000);
   });
