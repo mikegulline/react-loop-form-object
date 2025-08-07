@@ -1,6 +1,6 @@
 export interface FormField {
   name: string;
-  type: string;
+  type: 'text' | 'email' | 'tel';
   required?: boolean;
   value?: string | number;
 }
