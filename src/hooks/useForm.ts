@@ -63,7 +63,6 @@ export const useForm = () => {
       });
 
       setTableData(tableData);
-      if (ref.current) ref.current.focus();
     },
     [formFields]
   );
