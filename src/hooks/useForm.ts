@@ -11,9 +11,10 @@ export const useForm = () => {
 
   useEffect(() => {
     const fetchData = async (retry = 0) => {
+      setLoading(true);
       try {
         const response = await getFormFields();
-        const data = JSON.parse(response);
+        const data = await JSON.parse(response);
         setFormFields(data);
         setError(null);
       } catch (err: unknown) {
